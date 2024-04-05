@@ -4,10 +4,13 @@ Um site de locação de quadras esportivas
 
 ## :technologist: Membros da equipe
 
-539849 ANA BEATRIZ CLAUDIO MACHADO
-537656 ANA JULIA ARAUJO DA SILVA
-542278 CAROLAINE LIMA BEZERRA
-421599 GABRIEL LEITAO DE ANDRADE
+539849 ANA BEATRIZ CLAUDIO MACHADO  
+
+537656 ANA JULIA ARAUJO DA SILVA  
+
+542278 CAROLAINE LIMA BEZERRA  
+
+421599 GABRIEL LEITAO DE ANDRADE  
 
 ## :people_holding_hands: Papéis ou tipos de usuário da aplicação
 Usuário não registrado
