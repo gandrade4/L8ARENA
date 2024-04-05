@@ -1,24 +1,28 @@
-# :checkered_flag: NOME DO PROJETO
+# :checkered_flag: L8 ARENA
 
-Breve descrição do que o seu projeto faz.
+Um site de locação de quadras esportivas
 
 ## :technologist: Membros da equipe
 
-Matrícula, nome e curso dos participantes.
+539849 ANA BEATRIZ CLAUDIO MACHADO
+537656 ANA JULIA ARAUJO DA SILVA
+542278 CAROLAINE LIMA BEZERRA
+421599 GABRIEL LEITAO DE ANDRADE
 
 ## :people_holding_hands: Papéis ou tipos de usuário da aplicação
-
-Informe aqui os tipos de usuário que irão interagir com a aplicação. Ex: administrador, locador, locatario, usuário não logado.
-
-> Tenha em mente que obrigatoriamente a aplicação deve possuir funcionalidades acessíveis a todos os tipos de usuário e outra funcionalidades restritas a certos tipos de usuários.
+Usuário não registrado
+Usuário registrado
+Administrador
 
 ## :spiral_calendar: Entidades ou tabelas do sistema
-
-Liste as principais entidades do sistema.
+Usuário
+Quadras
+Agenda de Horários
 
 ## :triangular_flag_on_post:	 Principais funcionalidades da aplicação
-
-Descreve ou liste brevemente as principais funcionalidades da aplicação que será desenvolvida. Destaque a funcionalidades que serão acessévies a todos os usuários e aquelas restriras a usuários logados.
+Usuário não registrado poderão ver as quadras e horários disponíveis
+Usuário registrado poderá escolher e reservar uma quadra em horários e dias específicos
+Administrador pode cancelar, mudar horário/dia, remover e adicionar quadras
 
 
 ----
