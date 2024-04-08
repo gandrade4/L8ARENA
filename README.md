@@ -13,19 +13,28 @@ Um site de locação de quadras esportivas
 421599 GABRIEL LEITAO DE ANDRADE  
 
 ## :people_holding_hands: Papéis ou tipos de usuário da aplicação
-Usuário não registrado
-Usuário registrado
-Administrador
+Usuário não registrado  
+
+Usuário registrado  
+
+Administrador  
+
 
 ## :spiral_calendar: Entidades ou tabelas do sistema
-Usuário
-Quadras
-Agenda de Horários
+Usuário  
+
+Quadras  
+
+Agenda de Horários  
+
 
 ## :triangular_flag_on_post:	 Principais funcionalidades da aplicação
-Usuário não registrado poderão ver as quadras e horários disponíveis
-Usuário registrado poderá escolher e reservar uma quadra em horários e dias específicos
-Administrador pode cancelar, mudar horário/dia, remover e adicionar quadras
+Usuário não registrado poderão ver as quadras e horários disponíveis.  
+
+Usuário registrado poderá escolher e reservar uma quadra em horários e dias específicos.  
+
+Administrador pode cancelar, mudar horário/dia, remover e adicionar quadras  
+
 
 
 ----
