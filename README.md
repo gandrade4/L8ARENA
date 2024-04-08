@@ -25,7 +25,7 @@ Usuário
 
 Quadras  
 
-Agenda de horários pré fixados
+Agenda de horários pré determinados pelo administrador  
 
 Avaliação de feedback (nota e comentário) - só quando é finalizado pelo adm
 
@@ -35,7 +35,7 @@ Usuário não registrado poderão ver as quadras e horários disponíveis.
 
 Usuário registrado poderá escolher e reservar uma quadra em horários e dias específicos.  
 
-Administrador pode cancelar, aceitar reservas, mudar horário/dia, remover e adicionar quadras, concluir reservas
+Administrador pode cancelar, aceitar reservas, disponibilizar horário/dia, remover e adicionar quadras, concluir reservas
 
 
 
