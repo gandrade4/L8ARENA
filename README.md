@@ -25,7 +25,9 @@ Usuário
 
 Quadras  
 
-Agenda de Horários  
+Agenda de horários pré fixados
+
+Avaliação de feedback (nota e comentário) - só quando é finalizado pelo adm
 
 
 ## :triangular_flag_on_post:	 Principais funcionalidades da aplicação
@@ -33,7 +35,7 @@ Usuário não registrado poderão ver as quadras e horários disponíveis.
 
 Usuário registrado poderá escolher e reservar uma quadra em horários e dias específicos.  
 
-Administrador pode cancelar, mudar horário/dia, remover e adicionar quadras  
+Administrador pode cancelar, aceitar reservas, mudar horário/dia, remover e adicionar quadras, concluir reservas
 
 
 
