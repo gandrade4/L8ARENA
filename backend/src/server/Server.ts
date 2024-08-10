@@ -1,4 +1,4 @@
-import express from 'express';
+/*import express from 'express';
 
 const server = express();
 
@@ -15,4 +15,27 @@ server.get(`/`, (req, res) =>{
         res.send(htmlResponse);
 });
 
-export {server};
+export {server};*/
+
+
+
+
+
+
+
+import express from 'express';
+import { router } from './routes';
+
+
+
+const server = express(); 
+
+server.use(express.json());
+
+server.use(router);
+
+
+
+
+
+export { server };
