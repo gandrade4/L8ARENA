@@ -1,21 +1,17 @@
 import { Request, Response } from 'express';
-import { }
+import { StatusCodes } from 'http-status-codes';
+import * as yup from 'yup';
 
 
 interface User {
-    id:string;
+    id: string;
     name: string;
     email: string;
+    senha: string;
 }
 
-let users: User [] = [];
+export const create = async (req: Request<{}, {}, {} , {}, User>, res: Response) => {
+    console.log(req.body)
 
-export const createUser = (userData: { name:string, email:string }): User => {
-    const newUser: User = {
-        id: String(users.length +1),
-        name: userData.name,
-        email: userData.email  
-    };
-    users.push(newUser);
-    return newUser;
-}
+    return res.send(StatusCodes.INTERNAL_SERVER_ERROR).send('Não Implementado');
+};
