@@ -14,7 +14,7 @@ router.get('/', (_,res) => {
 // `UserController.createValidation` valida os dados antes de passar para o controlador (middleware)
 // `UserController.create` processa a requisição e executa a lógica para criar um usuário
 router.post('/users', UserController.createBodyValidator, UserController.create);
-//router.get('/users', UserController.list);
+//router.get('/users/:id', UserController.list);
 //router.put('/users/:id', UserController.createBodyValidator, UserController.update);
 //router.delete('/users/:id', UserController.remove);
 
