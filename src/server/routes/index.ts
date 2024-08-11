@@ -1,7 +1,7 @@
 import { Router } from 'express'; // O `Router` divide o nosso servidor em seções
 import { StatusCodes } from 'http-status-codes';
 
-import { UserController } from '../../controllers';
+import { UserController } from '../controllers';
 
 const router =  Router();
 
