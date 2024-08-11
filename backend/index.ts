@@ -1,4 +1,3 @@
-"use strict";
 /*import { server } from "./routes/Server";
 
 const router = Router();
@@ -18,6 +17,8 @@ router.get('/', (req, res) => {
 
 
 server.listen(3333, ()=>console.log('funcionou!'))*/
-Object.defineProperty(exports, "__esModule", { value: true });
-const Server_1 = require("./src/server/Server");
-Server_1.server.listen(3333, () => console.log('App rodando!'));
+
+
+import { server } from './src/server/Server';
+
+server.listen(3333, () => console.log('App rodando!'));
