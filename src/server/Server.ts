@@ -1,5 +1,5 @@
 import express from 'express'; 
-import { router } from './routes'; // Importando as regras de rota da pasta `routes`
+import { router } from './routes'; // Importando rotas de um arquivo separado
 
 
 
@@ -7,10 +7,10 @@ import { router } from './routes'; // Importando as regras de rota da pasta `rou
 // Criando uma aplicação Express
 const server = express(); 
 
-// Configurando o servidor para entender arquivos JSON
+// Configurando o servidor para receber arquivos JSON
 server.use(express.json());
 
-// Usando as regras de rota definidas
+// Usando as regras de rota definidas no arquivo `routes`
 server.use(router);
 
 

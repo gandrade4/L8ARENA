@@ -9,7 +9,10 @@ router.get('/', (_,res) => {
     return res.send('ola');
 });
 
-router.post('/usuarios',/* UserController.createValidation,*/ UserController.create);
+// Criando uma rota de requisições `POST` no caminho `/usuarios` 
+// `UserController.createValidation` valida os dados antes de passar para o controlador (middleware)
+// `UserController.create` processa a requisição e executa a lógica para criar um usuário
+router.post('/usuarios', /*UserController.createValidation,*/ UserController.create);
 
-//Exportanto as regras de rota p/ serem utilizadas no servidor
+// Exportanto as regras de rota p/ serem utilizadas no servidor
 export { router }; 
