@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Zé das Couves",
+    "username": "zedascouves",
+    "email": "ze@couve.com",
+    "password": "couve123"
+  },
+  {
+    "id": 2,
+    "name": "Maria Banana",
+    "username": "bananinha",
+    "email": "maria@banana.com",
+    "password": "banana456"
+  },
+  {
+    "id": 3,
+    "name": "Carlos Coelho",
+    "username": "coelhinho",
+    "email": "carlos@coelho.com",
+    "password": "coelho789"
+  }
+]
