@@ -6,18 +6,21 @@ import path from 'path';
 
 
 interface User {
-    id?: number;
-    nome: string;
-    email: string;
-    senha: string;
+    id?: number,
+    name: string,
+    username: string,
+    email: string,
+    password: string,
+    role?: string;
 }
 
 const dataPath = path.join(__dirname, '../../database/users.json');
 
 const bodyValidation: yup.Schema<User> = yup.object().shape({
-    nome: yup.string().required().min(3),
+    name: yup.string().required().min(3),
     email: yup.string().required().email(),
-    senha: yup.string().required().min(8)
+    username: yup.string().required().min(3),
+    password: yup.string().required().min(8)
 });
 
 export const createBodyValidator: RequestHandler = async (req, res, next) => {
@@ -40,9 +43,6 @@ export const createBodyValidator: RequestHandler = async (req, res, next) => {
         return res.status(StatusCodes.BAD_REQUEST).json({ errors });
     }
 };
-
-
-
 
 
 
