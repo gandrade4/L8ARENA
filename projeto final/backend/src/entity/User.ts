@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm"
 import { Role } from "./Role"
+import { Reserva } from "./Reserva"
 
 @Entity()
 export class User {
@@ -21,4 +22,7 @@ export class User {
 
     @ManyToOne(() => Role, (role) => role.users)
     role!: Role
+
+    @OneToMany(() => Reserva, (reserva) => reserva.user)
+    reservas!: Reserva [];
 }

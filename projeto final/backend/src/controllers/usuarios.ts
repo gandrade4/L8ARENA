@@ -1,6 +1,4 @@
 import { Request, Response } from  'express';
-import fs from 'fs/promises';
-import path from 'path';
 import { StatusCodes } from 'http-status-codes';
 import { AppDataSource } from '../dataSource';
 import { User } from '../entity/User'
