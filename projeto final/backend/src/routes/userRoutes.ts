@@ -1,23 +1,24 @@
 import { Router } from 'express'
 import { createUser, getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/usuarios';
-import { validateUser } from '../middleware/validation';
+import { validateUser } from '../middleware/validationMiddleware';
 
 
 const router = Router()
 
+
 //Criar usuário
-router.post('/users', validateUser, createUser);
+router.post('/',validateUser, createUser);
 
 //Listar usuários
-router.get('/users', getAllUsers);
+router.get('/', getAllUsers);
 
 //Buscar usuário
-router.get('/users/:id', getUserById);
+router.get('/:id', getUserById);
 
 //Atualizar usuário
-router.put('/users/:id', validateUser, updateUser);
+router.put('/:id', validateUser, updateUser);
 
 //Deletar usuário
-router.delete('/users/:id', deleteUser);
+router.delete('/:id', deleteUser);
 
 export default router;

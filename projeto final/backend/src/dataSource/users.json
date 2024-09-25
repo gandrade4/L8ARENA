@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Zé das Couves",
+    "username": "zedascouves",
+    "email": "ze@couve.com",
+    "password": "couve123"
+  },
+  {
+    "id": 2,
+    "name": "Maria Banana",
+    "username": "bananinha",
+    "email": "maria@banana.com",
+    "password": "banana456"
+  },
+  {
+    "id": 3,
+    "name": "Mago dos Ventos",
+    "username": "windMage",
+    "email": "mago@ventos.com",
+    "password": "tempestadeMisteriosa654"
+  },
+  {
+    "id": 4,
+    "name": "Guardião da Floresta",
+    "username": "protetor_floresta",
+    "email": "guardiao@floresta.com",
+    "password": "naturezaSagrada321"
+  },
+  {
+    "id": 5,
+    "name": "Carlos Frango",
+    "username": "frango_fritador",
+    "email": "carlos@frango.com",
+    "password": "frango321"
+  }
+]

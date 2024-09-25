@@ -2,86 +2,136 @@ import { Request, Response } from  'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { StatusCodes } from 'http-status-codes';
+import { AppDataSource } from '../dataSource';
+import { User } from '../entity/User'
+import { Role } from '../entity/Role';
 
-interface User {
-    id: number,
-    name: string,
-    username: string,
-    email: string,
-    password: string,
-    role?: string;
-}
 
-const dataPath = path.join(__dirname, '../database/users.json');
-
-const readUsers = async () => {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
-};
-
-const writeUsers = async (users: User[]) => {
-    await fs.writeFile(dataPath, JSON.stringify(users, null, 2));
-};
 
 //Listar usuários
 export const getAllUsers = async (req: Request, res: Response) => {
-    const users = await readUsers(); // Lendo a array de usuários
-    return res.status(StatusCodes.OK).json(users); // Retornando todos os usuários
+    const userRepository = AppDataSource.getRepository(User)
+    const users = await userRepository.find({ relations: ['role']})
+    res.json({
+        data: users
+    })
 }
 
 // Criar usuário
 export const createUser = async (req: Request, res: Response) => {
-    const users = await readUsers();
-    const newUser: User = {id: users.length + 1, ...req.body};
+    try {
+        const { name, username, email, password, role } = req.body;
 
-    users.push(newUser);
-    await writeUsers(users);
+        const userRepository = AppDataSource.getRepository(User);
+        const roleRepository = AppDataSource.getRepository(Role);
 
-    return res.status(StatusCodes.OK).json(newUser); 
-}
+        // Verificar se o papel existe no banco de dados
+        let roleInDB = await roleRepository.findOne({ where: { name: role } });
+
+        // Se o papel não existe, crie um novo
+        if (!roleInDB) {
+            roleInDB = roleRepository.create({ name: role });
+            await roleRepository.save(roleInDB);
+        }
+
+        // Criar o novo usuário
+        const newUser = userRepository.create({
+            name,
+            username,
+            email,
+            password,
+            role: roleInDB,
+        });
+
+        await userRepository.save(newUser);
+
+        res.status(StatusCodes.CREATED).json(newUser);
+    } catch (error) {
+        console.error("Erro ao criar usuário:", error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Erro ao criar o usuário." });
+    }
+};
 
 // Buscar usuário
 export const getUserById = async (req: Request<{ id: string }>, res: Response) => {
-    const users = await readUsers();
     const { id } = req.params; // Pegando o ID da URL
+    const userRepository = AppDataSource.getRepository(User);
 
-    const user = users.find((u:any) => u.id === parseInt(id)); // Procurando usuário pelo ID
+    const user = await userRepository.findOne({
+        where: {
+            id: parseInt(id) // Procurando usuário pelo ID
+        },
+        relations: ['role']
+      }) 
 
     if (!user) {
         return res.status(StatusCodes.NOT_FOUND).json({ message: 'Usuário não encontrado'});
     }
-
-    return res.status(StatusCodes.OK).json(user);
+    res.json({
+        data: user
+    })
 };
 
 // Atualizar usuario
 export const updateUser = async (req: Request<{ id: string }>, res: Response) => {
-    const users = await readUsers();
     const { id } = req.params;
+    const { name, username, email, password, role } = req.body;
 
-    const userIndex = users.findIndex((u: any) => u.id === parseInt(id));
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({
+        where: {
+            id: parseInt(id)
+        },
+        relations: ['role']
+     })
 
-    if (userIndex === -1) {
+    if (!user) {
         return res.status(StatusCodes.NOT_FOUND).json({ message: 'Usuário não encontrado' });
     }
 
-    users[userIndex] = { ...users[userIndex], ...req.body }; // Atualizar o usuário com novos dados
-    await writeUsers(users); 
+    if (username !== user.username) {
+        const existingUser = await userRepository.findOneBy({ username });
+        if (existingUser) {
+            return res.status(StatusCodes.CONFLICT).json({ message: "O nome de usuário já está em uso." });
+        }
+    }
 
-    return res.status(StatusCodes.OK).json(users[userIndex]);
+    const roleRepository = AppDataSource.getRepository(Role);
+    let roleInDB = await roleRepository.findOne({ where: { name: role } });
+
+        // Se o papel não existe, crie um novo
+        if (!roleInDB) {
+            roleInDB = roleRepository.create({ name: role });
+            await roleRepository.save(roleInDB);
+        }
+
+
+    user.name = name ?? user.name;
+    user.username = username ?? user.username;
+    user.email = email ?? user.email;
+    user.password = password ?? user.password;
+    user.role = roleInDB;
+
+    userRepository.save(user)
+    return res.status(StatusCodes.OK).json(user);
 };
 
 // Deletar usuario
 export const deleteUser = async (req: Request<{ id:string }>, res: Response) => {
-    const users = await readUsers();
     const { id } = req.params;
 
-    const newUsers = users.filter((u: any) => u.id !== parseInt(id)); // Filtrar o array removendo o usuário com o ID
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({
+        where: {
+            id: parseInt(id)
+        },
+        relations: ['role']
+     })
 
-    if (newUsers.length === users.length) {
-        return res.status(StatusCodes.NOT_FOUND).json({ message: 'Usuário não encontrado'});
+    if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({ message: 'Usuário não encontrado' });
     }
 
-    await writeUsers(newUsers); // Salvar o novo array
-    return res.status(StatusCodes.NO_CONTENT).send();
+    userRepository.remove(user)
+    return res.status(StatusCodes.NO_CONTENT).json(user);
 };
