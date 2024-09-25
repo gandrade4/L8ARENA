@@ -131,5 +131,5 @@ export const deleteUser = async (req: Request<{ id:string }>, res: Response) => 
     }
 
     userRepository.remove(user)
-    return res.status(StatusCodes.NO_CONTENT).json(user);
+    return res.status(StatusCodes.NO_CONTENT).json();
 };

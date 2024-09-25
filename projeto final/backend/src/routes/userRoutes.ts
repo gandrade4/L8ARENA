@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import { createUser, getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/usuarios';
-import { validateUser } from '../middleware/validationMiddleware';
+import { validateUserBody } from '../middleware/validationMiddleware';
 
 
 const router = Router()
 
 
 //Criar usuário
-router.post('/',validateUser, createUser);
+router.post('/', validateUserBody, createUser);
 
 //Listar usuários
 router.get('/', getAllUsers);
@@ -16,7 +16,7 @@ router.get('/', getAllUsers);
 router.get('/:id', getUserById);
 
 //Atualizar usuário
-router.put('/:id', validateUser, updateUser);
+router.put('/:id', validateUserBody, updateUser);
 
 //Deletar usuário
 router.delete('/:id', deleteUser);

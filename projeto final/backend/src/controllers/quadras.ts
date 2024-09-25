@@ -92,6 +92,6 @@ export const deleteCourt = async (req: Request<{ id: string }>, res: Response) =
     }
 
     courtRepository.remove(court)
-    return res.status(StatusCodes.NO_CONTENT).json(courtRepository);
+    return res.status(StatusCodes.NO_CONTENT).json();
 
 };
