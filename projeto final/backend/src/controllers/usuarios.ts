@@ -110,7 +110,7 @@ export const updateUser = async (req: Request<{ id: string }>, res: Response) =>
     user.password = password ?? user.password;
     user.role = roleInDB;
 
-    userRepository.save(user)
+    await userRepository.save(user)
     return res.status(StatusCodes.OK).json(user);
 };
 
@@ -130,6 +130,6 @@ export const deleteUser = async (req: Request<{ id:string }>, res: Response) => 
         return res.status(StatusCodes.NOT_FOUND).json({ message: 'Usuário não encontrado' });
     }
 
-    userRepository.remove(user)
+    await userRepository.remove(user)
     return res.status(StatusCodes.NO_CONTENT).json();
 };

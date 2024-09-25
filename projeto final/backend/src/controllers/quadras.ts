@@ -71,7 +71,7 @@ export const updateCourt = async (req: Request<{ id: string }>, res: Response) =
     court.type = type ?? court.type
     court.isAvailable = isAvailable ?? court.isAvailable
 
-    courtRepository.save(court)
+    await courtRepository.save(court)
 
     return res.status(StatusCodes.OK).json(court)
 };
@@ -91,7 +91,7 @@ export const deleteCourt = async (req: Request<{ id: string }>, res: Response) =
         return res.status(StatusCodes.NOT_FOUND).json({ message: 'Quadra não encontrada'})
     }
 
-    courtRepository.remove(court)
+    await courtRepository.remove(court)
     return res.status(StatusCodes.NO_CONTENT).json();
 
 };
