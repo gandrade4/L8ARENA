@@ -1,7 +1,10 @@
 import express from 'express';
 import userRoutes from './routes/userRoutes';
-import quadraRoutes from './routes/quadraRoutes'
+import quadraRoutes from './routes/quadraRoutes';
+import reservaRoutes from './routes/reservaRoutes';
+import authRoutes from './routes/authRoutes'
 import { AppDataSource } from './dataSource';
+
 
 async function startServer() {
    try {
@@ -15,6 +18,8 @@ async function startServer() {
     
     app.use('/users', userRoutes);
     app.use('/quadras', quadraRoutes);
+    app.use('/reservas', reservaRoutes);
+    app.use('/', authRoutes);
     
     app.listen(port, () => {
         console.log(`Servidor escutando a port ${port} em http://localhost:${port}`)

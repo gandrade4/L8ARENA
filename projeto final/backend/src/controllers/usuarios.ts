@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { AppDataSource } from '../dataSource';
 import { User } from '../entity/User'
 import { Role } from '../entity/Role';
-
+import bcrypt from 'bcryptjs'
 
 
 //Listar usuários
@@ -33,11 +33,13 @@ export const createUser = async (req: Request, res: Response) => {
         }
 
         // Criar o novo usuário
+        const hashedPassword = bcrypt.hashSync(password, 10)
+        
         const newUser = userRepository.create({
             name,
             username,
             email,
-            password,
+            password: hashedPassword,
             role: roleInDB,
         });
 
