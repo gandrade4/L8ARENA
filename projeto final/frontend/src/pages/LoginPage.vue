@@ -88,7 +88,7 @@ function goToCreateUser() {
 
           <div class="mb-3">
             <label for="passwordInput" class="form-label">Senha:</label>
-            <input v-model="password" type="password" class="form-control" id="passwordInput" required>
+            <input v-model="password" type="password" class="form-control" id="passwordInput" placeholder="Digite sua senha" required>
             <div class="invalid-feedback">
               A senha é um campo obrigatório.
             </div>
@@ -105,8 +105,8 @@ function goToCreateUser() {
         </p>
 
         <!-- Botão para criar usuário -->
-        <div class="mt-3">
-          <button class="btn btn-secondary" @click="goToCreateUser">Criar usuário</button>
+        <div class="mt-3 text-center">
+          <button class="btn btn-secondary" @click="goToCreateUser" :disabled="loading">Criar usuário</button>
         </div>
       </div>
     </div>
