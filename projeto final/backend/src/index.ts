@@ -3,6 +3,7 @@ import userRoutes from './routes/userRoutes';
 import quadraRoutes from './routes/quadraRoutes';
 import reservaRoutes from './routes/reservaRoutes';
 import authRoutes from './routes/authRoutes'
+import horarioRoutes from './routes/horarioRoutes'
 import { AppDataSource } from './dataSource';
 
 
@@ -18,6 +19,7 @@ async function startServer() {
     
     app.use('/users', userRoutes);
     app.use('/quadras', quadraRoutes);
+    app.use(horarioRoutes);
     app.use('/reservas', reservaRoutes);
     app.use('/', authRoutes);
     

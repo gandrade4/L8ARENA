@@ -7,10 +7,10 @@ export class Horario {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column({ type: "datetime"})
+    @Column()
     startTime!: Date;
 
-    @Column({ type: "datetime"})
+    @Column()
     endTime!: Date;
 
     @ManyToOne(() => Quadra, (quadra) => quadra.horarios)

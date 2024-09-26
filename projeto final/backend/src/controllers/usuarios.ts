@@ -46,9 +46,8 @@ export const createUser = async (req: Request, res: Response) => {
         await userRepository.save(newUser);
 
         res.status(StatusCodes.CREATED).json(newUser);
-    } catch (error) {
-        console.error("Erro ao criar usuário:", error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Erro ao criar o usuário." });
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Erro ao criar o usuário.", err });
     }
 };
 

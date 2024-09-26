@@ -20,6 +20,6 @@ export class Quadra {
     @OneToMany(() => Reserva, (reservas) => reservas.quadra)
     reservas!: Reserva [];
 
-    @OneToMany(() => Horario, (horarios) => horarios.quadra)
+    @OneToMany(() => Horario, (horarios) => horarios.quadra, { cascade: true })
     horarios!: Horario [];
 }

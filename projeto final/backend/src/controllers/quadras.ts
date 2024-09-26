@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { AppDataSource } from "../dataSource";
 import { Quadra } from "../entity/Quadra";
+import { Horario } from "../entity/Horario";
 
 // Listar quadras
 export const getAllCourts = async (req: Request, res: Response) => {
     const courtRepository = AppDataSource.getRepository(Quadra)
-    const courts = await courtRepository.find()
+    const courts = await courtRepository.find({ relations: ['horarios']})
     res.json({
         data: courts
     })
@@ -25,10 +26,10 @@ export const createCourt = async (req: Request, res: Response) => {
         });
 
         await courtRepository.save(newCourt);
-        res.status(StatusCodes.CREATED).json(newCourt);
 
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Erro ao criar quadra." });
+        res.status(StatusCodes.CREATED).json(newCourt);
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ' Erro ao criar quadra', err});
     }
 };
 
@@ -52,7 +53,7 @@ export const getCourtById = async (req: Request<{ id: string }>, res: Response) 
 };
 
 // Atualizar quadra
-export const updateCourt = async (req: Request<{ id: string }>, res: Response) => {
+export const updateCourt = async (req: Request, res: Response) => {
     const { id } = req.params;
     const {name, type, isAvailable } = req.body
 
@@ -81,6 +82,7 @@ export const deleteCourt = async (req: Request<{ id: string }>, res: Response) =
     const { id } = req.params;
 
     const courtRepository = AppDataSource.getRepository(Quadra);
+    const scheduleRepository = AppDataSource.getRepository(Horario);
     const court = await courtRepository.findOne({
         where: {
             id: parseInt(id)
@@ -90,6 +92,8 @@ export const deleteCourt = async (req: Request<{ id: string }>, res: Response) =
     if (!court) {
         return res.status(StatusCodes.NOT_FOUND).json({ message: 'Quadra não encontrada'})
     }
+
+    await scheduleRepository.delete({ quadra: { id: court.id } });
 
     await courtRepository.remove(court)
     return res.status(StatusCodes.NO_CONTENT).json();
