@@ -1,126 +1,176 @@
 <template>
   <div>
-    <!-- Mensagem de sucesso ao realizar a reserva -->
-    <div v-if="success" class="alert alert-success alert-dismissible" role="alert">
-      A reserva foi realizada com sucesso!
-      <button @click="success = false" type="button" class="btn-close" aria-label="Fechar"></button>
-    </div>
+    <h1>Gerenciar Reservas</h1>
 
-    <!-- Loader enquanto os dados estão sendo carregados -->
-    <div v-if="loading" class="d-flex justify-content-center">
-      <div class="spinner-grow" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-    </div>
-
-    <!-- Seleção da quadra e exibição do calendário -->
-    <div v-else>
-      <div class="mb-3">
-        <label for="quadra" class="form-label">Quadra</label>
-        <select id="quadra" v-model="selectedQuadra" class="form-select" @change="checkAvailability">
-          <option value="" disabled selected>Selecione uma quadra</option>
-          <option v-for="quadra in quadras" :key="quadra.id" :value="quadra">
-            {{ quadra.name }} - {{ quadra.type }}
+    <!-- Formulário para criar ou atualizar uma reserva -->
+    <form @submit.prevent="submitReserva">
+      <div>
+        <label for="quadra">Selecione a Quadra:</label>
+        <select v-model="reservaData.quadraId" id="quadra" required>
+          <option value="" disabled>Selecione uma quadra</option>
+          <option v-for="quadra in quadras" :key="quadra.id" :value="quadra.id">
+            {{ quadra.nome }}
           </option>
         </select>
       </div>
 
-      <!-- Componente CalendarComponent para mostrar os horários disponíveis -->
-      <CalendarComponent
-        v-if="selectedQuadra"
-        :quadraId="selectedQuadra.id"
-        @reserve="reserveQuadra"
-      />
-    </div>
+      <div>
+        <label for="reservaData">Data da Reserva:</label>
+        <input v-model="reservaData.reservaData" id="reservaData" type="date" required />
+      </div>
+
+      <div>
+        <label for="startTime">Hora de Início:</label>
+        <select v-model="reservaData.startTime" id="startTime" required>
+          <option value="" disabled>Selecione o horário de início</option>
+          <option v-for="horario in horarios" :key="horario.startTime" :value="horario.startTime">
+            {{ formatTime(horario.startTime) }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="endTime">Hora de Término:</label>
+        <select v-model="reservaData.endTime" id="endTime" required>
+          <option value="" disabled>Selecione o horário de término</option>
+          <option v-for="horario in horarios" :key="horario.endTime" :value="horario.endTime">
+            {{ formatTime(horario.endTime) }}
+          </option>
+        </select>
+      </div>
+
+      <button type="submit">Salvar Reserva</button>
+    </form>
+
+    <!-- Exibir todas as reservas -->
+    <h2>Reservas Existentes</h2>
+    <ul>
+      <li v-for="reserva in reservas" :key="reserva.id">
+        Reserva ID: {{ reserva.id }} | Quadra: {{ reserva.quadra.nome }} | 
+        Data: {{ reserva.reservaData }} | Início: {{ formatTime(reserva.startTime) }} | Término: {{ formatTime(reserva.endTime) }}
+        <button @click="editReserva(reserva)">Editar</button>
+        <button @click="deleteReserva(reserva.id)">Deletar</button>
+      </li>
+    </ul>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import { api } from '@/api'; // Importa a API
-import type { Quadra, ApplicationError } from '@/types'; // Tipos utilizados
-import { useUserStore } from '@/stores/userStore'; // Armazenamento do usuário
-import { isAxiosError } from 'axios';
-import { isApplicationError } from '@/composables/useApplicationError'; // Função para tratar erros
-import CalendarComponent from '@/components/CalendarComponent.vue'; // Importa o novo componente
+<script>
+import axios from "axios";
 
-// Variáveis reativas
-const quadras = ref<Quadra[]>([]);
-const selectedQuadra = ref<Quadra | null>(null);
-const exception = ref<ApplicationError | null>(null);
-const loading = ref(true);
-const success = ref(false);
-
-const userStore = useUserStore(); // Obtém o estado do usuário
-
-// Função para carregar as quadras disponíveis
-async function loadQuadras() {
-  try {
-    const res = await api.get('http://localhost:2222/quadras', {
-      headers: {
-        Authorization: `Bearer ${userStore.jwt}`
+export default {
+  data() {
+    return {
+      reservaData: {
+        quadraId: "",
+        reservaData: "",
+        startTime: "",
+        endTime: "",
+      },
+      reservas: [],
+      quadras: [], // Para armazenar as quadras disponíveis
+      horarios: [], // Para armazenar os horários disponíveis
+      editMode: false,
+      editReservaId: null,
+    };
+  },
+  methods: {
+    // Função para buscar as quadras disponíveis
+    async fetchQuadras() {
+      try {
+        const response = await axios.get("http://localhost:2222/quadras/");
+        this.quadras = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar quadras:", error);
       }
-    });
-    quadras.value = res.data.data; // Armazena as quadras
-  } catch (e) {
-    exception.value = e as ApplicationError; // Captura erros de aplicação
-  } finally {
-    loading.value = false; // Finaliza o carregamento
-  }
-}
+    },
 
-// Função para verificar a disponibilidade da quadra selecionada
-async function checkAvailability() {
-  if (!selectedQuadra.value) return;
-  try {
-  const res = await api.get(`http://localhost:2222/quadras/${selectedQuadra.value.id}/disponibilidade`, {
-    headers: {
-      Authorization: `Bearer ${userStore.jwt}`
-    }
-  });
-  availableHorarios.value = res.data.data.map((horario: string) => {
-    const start = horario;
-    const end = new Date(new Date(horario).getTime() + 60 * 60 * 1000).toISOString();
-    return { title: 'Disponível', start, end };
-  });
-} catch (e) {
-  exception.value = e as ApplicationError;
-}
-}
-
-// Função para reservar a quadra
-async function reserveQuadra(horarioSelecionado: string) {
-  if (!selectedQuadra.value || !horarioSelecionado) return;
-
-  try {
-    await api.post('http://localhost:2222/reservas', {
-      quadraId: selectedQuadra.value.id,
-      modalidade: selectedQuadra.value.modalidade,
-      horario: horarioSelecionado
-    }, {
-      headers: {
-        Authorization: `Bearer ${userStore.jwt}`
+    // Função para buscar os horários disponíveis
+    async fetchHorarios() {
+      try {
+        const response = await axios.get("http://localhost:2222/quadras/:id/horarios");
+        this.horarios = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar horários:", error);
       }
-    });
-    success.value = true; // Marca a reserva como bem-sucedida
-  } catch (e) {
-    if (isAxiosError(e) && isApplicationError(e.response?.data)) {
-      exception.value = e.response?.data; // Captura erros de aplicação
-    } else {
-      exception.value = { message: 'Erro ao reservar a quadra. Tente novamente.' }; // Mensagem de erro genérica
-    }
-  }
-}
+    },
 
-// Carrega as quadras ao montar o componente
-onMounted(() => {
-  loadQuadras();
-});
+    // Função para buscar todas as reservas
+    async fetchReservas() {
+      try {
+        const response = await axios.get("http://localhost:2222/reservas/");
+        this.reservas = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar reservas:", error);
+      }
+    },
+
+    // Função para criar ou atualizar uma reserva
+    async submitReserva() {
+      try {
+        if (this.editMode) {
+          await axios.put(`http://localhost:2222/reservas/${this.editReservaId}`, this.reservaData);
+          this.editMode = false;
+          this.editReservaId = null;
+        } else {
+          await axios.post("http://localhost:2222/reservas/", this.reservaData);
+        }
+
+        this.reservaData = {
+          quadraId: "",
+          reservaData: "",
+          startTime: "",
+          endTime: "",
+        };
+
+        this.fetchReservas();
+      } catch (error) {
+        console.error("Erro ao salvar reserva:", error);
+      }
+    },
+
+    // Função para editar uma reserva
+    editReserva(reserva) {
+      this.editMode = true;
+      this.editReservaId = reserva.id;
+      this.reservaData = {
+        quadraId: reserva.quadra.id,
+        reservaData: reserva.reservaData.split("T")[0],
+        startTime: reserva.startTime,
+        endTime: reserva.endTime,
+      };
+    },
+
+    // Função para deletar uma reserva
+    async deleteReserva(id) {
+      try {
+        await axios.delete(`http://localhost:2222/reservas/${id}`);
+        this.fetchReservas();
+      } catch (error) {
+        console.error("Erro ao deletar reserva:", error);
+      }
+    },
+
+    // Função para formatar a hora
+    formatTime(dateTime) {
+      const date = new Date(dateTime);
+      return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+    },
+  },
+
+  mounted() {
+    this.fetchQuadras();
+    this.fetchHorarios();
+    this.fetchReservas();
+  },
+};
 </script>
 
 <style scoped>
-.spinner-grow {
-  width: 3rem;
-  height: 3rem;
+form {
+  margin-bottom: 20px;
+}
+button {
+  margin-left: 10px;
 }
 </style>
