@@ -1,9 +1,9 @@
 import express from 'express';
 import userRoutes from './routes/userRoutes';
 import quadraRoutes from './routes/quadraRoutes';
-import reservaRoutes from './routes/reservaRoutes';
 import authRoutes from './routes/authRoutes'
 import horarioRoutes from './routes/horarioRoutes'
+import reservaRoutes from './routes/reservaRoutes'
 import { AppDataSource } from './dataSource';
 
 
@@ -19,8 +19,8 @@ async function startServer() {
     
     app.use('/users', userRoutes);
     app.use('/quadras', quadraRoutes);
-    app.use(horarioRoutes);
     app.use('/reservas', reservaRoutes);
+    app.use('/quadras', horarioRoutes);
     app.use('/', authRoutes);
     
     app.listen(port, () => {
