@@ -59,6 +59,38 @@ export const createSchedule = async (req: Request<{ id: string }>, res: Response
     }
 };
 
+export const getCourtSchedules = async (req: Request<{id: string}>, res: Response) => {
+    const { id } = req.params;
+
+    const courtRepository = AppDataSource.getRepository(Quadra);
+
+    try {
+        // Encontre a quadra com os horários
+        const court = await courtRepository.findOne({
+            where: {
+                id: parseInt(id),
+            },
+            relations: ["horarios"], // Relacione os horários
+        });
+
+        // Verifique se a quadra existe
+        if (!court) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Quadra não encontrada.' });
+        }
+
+        // Retorne apenas os horários
+        res.status(StatusCodes.OK).json({
+            id: court.id,
+            name: court.name,
+            horarios: court.horarios.map(horario => ({
+                startTime: horario.startTime,
+                endTime: horario.endTime,
+            })),
+        });
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Erro ao buscar quadra e horários.', err });
+    }
+};
 
 
 export const deleteAllSchedules = async (req: Request, res: Response) => {
